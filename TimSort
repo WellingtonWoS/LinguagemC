@@ -1,0 +1,222 @@
+// Este é um programa em C para implementar o Timsort
+
+#include <stdio.h>   //Incluir arquivo para entrada/saída padrão
+#include <stdlib.h>  //Inclusão de outra biblioteca
+#include <time.h>    //Inclusão de outra biblioteca para que possamos usar time_t e clock_gettime()
+
+#define EXPERIMENT 0 //Use isso para a experimentação neste algoritmo
+#define RUN 2
+
+// =============== Funções auxiliares ===============
+//Abaixo está uma função auxiliar que pode ordenar um array por ordenação por inserção.
+//Nome: insertionSort
+// Input(s):
+//(1)'arr' é um ponteiro para um endereço inteiro. 
+//Este é o início de algum 'bloco de memória contíguo' que vamos classificar.
+//(2) 'l' e 'r' são inteiros, que são o primeiro índice e o último índice de 'arr' respectivamente.
+//Output: Nenhum valor é retornado, mas 'arr' deve ser modificado para armazenar uma matriz ordenada de números.
+void insertionSort(int arr[], int l, int r) {
+    if (arr == NULL || l>=r) return;
+    
+    int key;                          //Variável key = chave
+    int i, j;						  //Variáveis locais para o InsertionSort
+    for (i=l+1; i<=r; i++) {		  //FOR sendo declarada com suas condições e declementos
+        key = arr[i];				  //Variável sendo chamada para a criação de vetores, onde a variável vetor será "i"
+        j = i-1;					  // Variável "j" sendo declarada
+        while (j>=l && arr[j]>key) {  // WHILE sendo declarado e suas condições, aqui estamos criando vetores e suas condições
+            arr[j+1] = arr[j];        //Sequencias de comandos do WHILE
+            j--;					  //Variável "j" sendo declementada
+        }
+        arr[j+1] = key;			   	  //Vetor sendo criado, e resultando na chave
+    }
+    
+}
+
+//==============Abaixo está uma função de mesclagem.=============
+//Nome: merge
+//Input(s):
+//(1)'arr' é um ponteiro para um endereço inteiro.
+//Este é o início de algum 'bloco de memória contíguo' que vamos classificar.
+//(2) 'temp' é um ponteiro para um endereço inteiro.
+//Isso ajuda a armazenar temporariamente o subarray classificado.
+//(3) 'l', 'm' e 'r' são inteiros, que são o primeiro índice, o meio e o último índice de 'array' respectivamente.
+//Output: Nenhum valor é retornado, mas 'array' deve ser modificado para armazenar um array ordenado de números.
+void merge(int arr[], int temp[], int l, int m, int r){
+    if (arr == NULL || temp == NULL) return;     //Condição IF sendo informada com contexto lógico
+    
+    if (l > m || m+1 > r) return;				//Condição IF sendo informada com contexto lógico
+
+    int i = l;								   //Variáveis declaradas para a função void merge
+    int j = m + 1;
+    int start = l;
+
+//Depois de comparar, mescle os dois arrays em um subarray maior
+    while (i <= m && j <= r){				//While declarado com suas condições lógicas
+	if (arr[i] < arr[j]){					//IF sendo declarado com condições lógicas, criação de vetores no formato matriz
+	    temp[start++] = arr[i++];			
+	} else if (arr[i] == arr[j]){
+	    temp[start++] = arr[i++];
+	    temp[start++] = arr[j++];
+	}
+	else{
+	    temp[start++] = arr[j++];
+	}
+	
+    }
+
+//Copie os elementos restantes da esquerda, se houver
+    while (i <= m){
+	    temp[start++] = arr[i++];
+    }
+
+//Copie o elemento restante do direito, se houver
+    while (j <= r){
+	    temp[start++] = arr[j++];
+    }
+
+    for (i = l; i <= r; i++){
+	    arr[i] = temp[i];
+    }
+}
+
+//===============Abaixo está uma função min.=============
+//Nome: min
+//Input(s):
+//(1) 'arg1' and 'arg2' são dois inteiros para comparar.
+//Output:o menor inteiro.
+int min(int arg1, int arg2){
+    if (arg1 <= arg2){
+        return arg1;
+    } else {
+        return arg2;
+    }
+} 
+
+//==============Abaixo está uma função de classificação.=========
+//Name: timSort
+//Input(s):
+//(1) 'arr' é um ponteiro para um endereço inteiro 
+//Este é o início de algum 'bloco de memória contíguo' que iremos sort.
+//(2)'size' nos diz o tamanho do array de dados que estamos classificando.
+// Output: Nenhum valor é retornado, mas 'arr' deve ser modificado para armazenar uma matriz ordenada de números.
+void timSort(int arr[], unsigned int size){
+    if (arr == NULL || size <= 1) return;
+    
+//Ordenar subarrays individuais de tamanho RUN
+    for (int i=0; i < size; i+=RUN){
+        insertionSort(arr, i, min(i+RUN-1, size-1));
+    }
+    
+    int* temp = (int*)malloc(sizeof(int)*size);
+
+//Comece a mesclar a partir do tamanho RUN. Ele será mesclado no tamanho 2*RUN, depois 4*RUN, e assim por diante.
+//'l', 'm' e 'r' são os índices esquerdo, médio e direito de dois subarranjos contíguos.
+//'n' é o tamanho de um subarray.
+    int l, m, r, n;                 
+    for (n=RUN; n < size; n*=2){
+        for (l=0; l < size; l+=2*n){
+            m = l+n-1;
+            r = min(l+2*n-1, size-1);
+            if (m<r){
+                merge(arr, temp, l, m, r);
+            }
+        }
+    }
+    free(temp);
+}
+
+//=============Abaixo está uma função de impressão.==============
+// Name: printIntArray
+// Input(s):
+//(1) 'arr' é um ponteiro para um endereço inteiro.
+//Este é o início de algum 'bloco de memória contíguo'
+//(2)'size' nos diz o quão grande é o array de dados.
+//Output: Nenhum valor é retornado, apenas imprima 'arr'.
+void printIntArray(int arr[], unsigned int size){
+  unsigned int i; // Nota: 'unsigned int' é um tipo de dados para armazenar números inteiros positivos.
+  for(i = 0; i < size; i++){
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
+}
+
+int main(int argc, char* argv[]){
+#if EXPERIMENT==0
+//Alguns conjuntos de dados de teste.
+  int dataset1[] = {0,1,2,3,4,5,6,7,8,9,10};
+  int dataset2[] = {10,9,8,7,6,5,4,3,2,1,0};
+  int dataset3[] = {0,3,2,1,4,7,6,5,8,9,10};
+  int dataset4[] = {2,1,1,1,1,1,1,1,1,1,1};
+  int dataset5[] = {100,201,52,3223,24,55,623,75,8523,-9,150};
+  int dataset6[] = {-1,1,2,-3,4,5,-6,7,8,-9,10};
+  
+//Classifique nosso array inteiro
+  timSort(dataset1, 11);
+  timSort(dataset2, 11);
+  timSort(dataset3, 11);
+  timSort(dataset4, 11);
+  timSort(dataset5, 11);
+  timSort(dataset6, 11);
+  
+//Imprima uma matriz
+  printIntArray(dataset1, 11);
+  printIntArray(dataset2, 11);
+  printIntArray(dataset3, 11);
+  printIntArray(dataset4, 11);
+  printIntArray(dataset5, 11);
+  printIntArray(dataset6, 11);
+
+#else
+
+  if (argc != 2) {
+    printf("One argument expected: ./insertion 1000\n");
+    return 1;
+  }
+
+//Converter o argumento do programa em um inteiro
+  const int size = atoi(argv[1]);
+  
+//Gerar uma semente aleatória
+  time_t t;
+  srand((unsigned)time(&t));
+  
+//Alocar memória
+  int* random = (int*)malloc(sizeof(int)*size);
+
+//Preencha nosso conjunto de dados de teste
+  for(int i = 0 ; i < size ; i++) {
+//Gerar valores aleatórios de 0 a 99
+    random[i] = rand()%size; 
+  }
+
+//Você pode descomentar se quiser ver o tamanho classificado
+//printf("Before the sort: ");
+//printIntArray(random, size);
+
+//Temporizadores de configuração 
+  struct timespec begin, end;
+  
+//Obtenha o tempo antes de começarmos
+  clock_gettime(CLOCK_MONOTONIC_RAW, &begin);
+  
+//Execute a classificação
+  timSort(random,size);
+  
+//Obtenha o tempo depois que terminarmos
+  clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+
+  double time_taken = (end.tv_nsec - begin.tv_nsec) / 1000000000.0 +
+            (end.tv_sec  - begin.tv_sec);
+  printf ("Total time = %f seconds\n", time_taken);
+
+//Confirme se a classificação funcionou
+//printf("After the sort: ");
+//printIntArray(random, size);
+  
+//Liberte nosso array aleatório
+  free(random);
+
+#endif
+
+  return 0;
+}
