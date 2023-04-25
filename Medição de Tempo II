@@ -1,0 +1,18 @@
+clude <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+
+int main(){
+    struct timeval Tempo_antes, Tempo_depois;
+    double deltaT;
+
+    gettimeofday (&Tempo_antes, NULL);
+        printf("Esta mensagem demora quanto tempo\n");
+        printf("Para ser impressa em tela?\n\n");
+
+    gettimeofday (&Tempo_depois, NULL);
+
+    deltaT = (Tempo_depois.tv_sec + Tempo_depois.tv_usec/1000000.0) -
+    (Tempo_antes.tv_sec + Tempo_antes.tv_usec/1000000.0);
+    printf("Tempo para execucao dos comandos: %f segundos\n", deltaT);
+}
