@@ -1,2 +1,2 @@
 # LinguagemC
-Introdução a Linguagem C
+Um pouco a Linguagem C
