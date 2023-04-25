@@ -1,0 +1,14 @@
+<stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(){
+    time_t antes, depois;
+
+    antes = time(0);
+    sleep(2);
+    depois = time(0);
+
+    printf("Entre %d e %d se passaram %f segundos\n",
+           antes, depois, difftime(depois, antes));
+}
