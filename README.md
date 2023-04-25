@@ -1,2 +1,2 @@
 # LinguagemC
-Um pouco a Linguagem C
+Um pouco de conhecimentp em Linguagem C
