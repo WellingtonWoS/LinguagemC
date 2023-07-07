@@ -1,0 +1,18 @@
+//Aula sobre Variáveis em C
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){  //A chave delimita um bloco de código (início do bloco
+
+	//Declarando variáveis
+	int idade;  //Variável inteiro
+	
+	//Função para escrever algo na saída padrão (console)
+	printf("Qual é a sua idade?"); //O ponto e vírgula finaliza um programa
+	
+	//Recebendo a variável para catalogar os dados
+	scanf("%d", &idade);  //
+	
+	return 0;
+	
+}  //Fim do bloco
