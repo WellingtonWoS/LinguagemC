@@ -8,10 +8,13 @@ int main(){  //A chave delimita um bloco de código (início do bloco
 	int idade;  //Variável inteiro
 	
 	//Função para escrever algo na saída padrão (console)
-	printf("Qual é a sua idade?"); //O ponto e vírgula finaliza um programa
+	printf("Qual a sua idade?\n "); //O ponto e vírgula finaliza um programa
 	
 	//Recebendo a variável para catalogar os dados
 	scanf("%d", &idade);  //
+	
+	//Saida dos dados
+	printf("A sua idade e: %d", idade);
 	
 	return 0;
 	
